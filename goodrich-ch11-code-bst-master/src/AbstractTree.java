@@ -236,6 +236,18 @@ public abstract class AbstractTree<E> implements Tree<E> {
   }
 
   public Iterable<Position<E>> preorderIterative() {
-      return null;
+    List<Position<E>> snapshot = new ArrayList<>();
+    if (!isEmpty()) {
+      Queue<Position<E>> fringe = new LinkedQueue<>();
+      fringe.enqueue(root());                 // start with the root
+      while (!fringe.isEmpty()) {
+        Position<E> p = fringe.dequeue();     // remove from front of the queue
+        snapshot.add(p);                      // report this position
+        for (Position<E> c : children(p))
+          fringe.enqueue(c);                  // add children to back of queue
+      }
+    }
+    return snapshot;
   }
+
 }
