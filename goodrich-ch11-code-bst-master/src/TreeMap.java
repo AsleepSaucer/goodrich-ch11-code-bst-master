@@ -21,13 +21,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import net.datastructures.AbstractSortedMap;
-import net.datastructures.Entry;
-import net.datastructures.LinkedBinaryTree;
-import net.datastructures.Position;
+import net.datastructures.*;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * An implementation of a sorted map using a binary search tree.
@@ -399,9 +397,19 @@ public class TreeMap<K,V> extends AbstractSortedMap<K,V> {
    * @return the existing value associated with the key (or null, if no such entry)
    */
   public V putIfAbsent(K key, V value) throws IllegalArgumentException {
-    // write "from scratch" version here
-    // DO NOT call put/get/set/remove
-    return null;
+    List<Position<E>> snapshot = new ArrayList<>();
+    if (!isEmpty()) {
+      Queue<Position<E>> fringe = new LinkedQueue<>();
+      fringe.enqueue(root());                 // start with the root
+      while (!fringe.isEmpty()) {
+        Position<E> p = fringe.dequeue();     // remove from front of the queue
+        snapshot.add(p);                      // report this position
+        for (Position<E> c : children(p))
+          fringe.enqueue(c);                  // add children to back of queue
+      }
+    }
+    return snapshot;
   }
+  
 
 }
